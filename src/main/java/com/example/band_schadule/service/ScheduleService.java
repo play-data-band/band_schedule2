@@ -6,6 +6,7 @@ import com.example.band_schadule.common.RestResult;
 import com.example.band_schadule.domain.dto.AttendanceRequestDto;
 import com.example.band_schadule.domain.entity.Attendance;
 import com.example.band_schadule.domain.entity.Schedule;
+import com.example.band_schadule.domain.request.MemberUpdateRequest;
 import com.example.band_schadule.domain.request.ScheduleRequest;
 import com.example.band_schadule.domain.response.ScheduleResponse;
 import com.example.band_schadule.repository.AttendanceRepository;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -85,6 +87,7 @@ public class ScheduleService {
     }
 
     //스케줄 참석/불참
+    @Transactional
     public ResponseEntity<RestResult<Object>> toggleAttendance(AttendanceRequestDto attendanceRequestDto) {
         Long memberId = attendanceRequestDto.getMemberId();
         Long communityId = attendanceRequestDto.getCommunityId();
@@ -112,11 +115,16 @@ public class ScheduleService {
             if ("Y".equals(useYn)) {
                 //참석할 수 있는 최대 인원과 현재 참석한 인원 비교
                 if (schedule.getParticipant() < schedule.getMaxParticipation()) {
+                    Boolean attendancecheck = checkAttandance(memberId,scheduleId);
+                    if (attendancecheck){
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(new RestResult<>("BAD_REQUEST", new RestError("BAD_REQUEST", "이미 가입했습니다.")));
+                    }
                     //참석
                     Attendance attendance = Attendance.builder()
                             .schedule(schedule)
                             .useYn(attendanceRequestDto.getUseYn())
-                            .communityMemberId(attendanceRequestDto.getMemberId())
+                            .memberId(attendanceRequestDto.getMemberId())
                             .build();
                     attendanceRepository.save(attendance);
 
@@ -130,7 +138,7 @@ public class ScheduleService {
 
             } else if ("N".equals(useYn)) {
                 //불참
-                Attendance attendance = attendanceRepository.findByCommunityMemberId(attendanceRequestDto.getMemberId());
+                Attendance attendance = attendanceRepository.findByMemberId(attendanceRequestDto.getMemberId());
 
                 // 참석 인원 감소
                 schedule.setParticipant(schedule.getParticipant() - 1);
@@ -143,12 +151,42 @@ public class ScheduleService {
     }
 
 
+   /* @Transactional
+    public void updateBoardMember(MemberUpdateRequest memberUpdateRequest, Long memberId) throws Exception {
+        if (memberUpdateRequest.getMemberImage() != null && memberUpdateRequest.getMemberName() !=null ){
+            scheduleRepository.updateBoardMemberImageAndMemberName(memberUpdateRequest.getMemberName(), memberUpdateRequest.getMemberImage(), memberId);
+        } else if (memberUpdateRequest.getMemberImage()!=null && memberUpdateRequest.getMemberName() ==null) {
+            scheduleRepository.updateBoardMemberImage(memberUpdateRequest.getMemberImage(),memberId);
+        } else if (memberUpdateRequest.getMemberImage()==null && memberUpdateRequest.getMemberName() != null) {
+            scheduleRepository.updateBoardMemberName(memberUpdateRequest.getMemberName(), memberId);
+        } else {
+            throw new Exception("NULL REQUEST");
+        }
+    }*/
+
+    public Boolean checkAttandance(Long memberId, Long scheduleid
+    ){
+       Optional<Attendance> check= attendanceRepository.findByMemberIdAndSchedule(memberId,Schedule.builder().id(scheduleid).build());
+       Boolean res = null;
+
+       try {
+           check.get();
+           res = Boolean.TRUE;
+       }catch (Exception e){
+           res = Boolean.FALSE;
+       }
+       return res;
+    }
+
+
+
     public List<ScheduleResponse> findAllBycommunityId(Long communityId) {
 
         List<Schedule> byCommunityId = scheduleRepository.findAllBycommunityId(communityId);
 
         return byCommunityId.stream().map(ScheduleResponse::new).toList();
     }
+
 }
 
 

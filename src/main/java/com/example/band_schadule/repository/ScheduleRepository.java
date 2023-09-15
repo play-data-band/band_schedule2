@@ -19,6 +19,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "order by s.scheduleTime asc")
     List<Schedule> getScheduleByMain(List<String> interests, @Param("currentTime") LocalDateTime currentTime);
 
+
     List<Schedule> findAllBycommunityId(Long communityId);
+
 }
 

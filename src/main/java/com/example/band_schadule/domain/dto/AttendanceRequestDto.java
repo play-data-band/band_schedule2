@@ -13,5 +13,4 @@ public class AttendanceRequestDto {
     private Long scheduleId;
     private String useYn;
     private Long communityId;
-
 }
