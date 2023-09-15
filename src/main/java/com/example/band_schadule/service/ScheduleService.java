@@ -150,18 +150,18 @@ public class ScheduleService {
         return ResponseEntity.ok(new RestResult<>("success", "참석이 완료 되었습니다."));
     }
 
-   /* @Transactional
+    @Transactional
     public void updateBoardMember(MemberUpdateRequest memberUpdateRequest, Long memberId) throws Exception {
         if (memberUpdateRequest.getMemberImage() != null && memberUpdateRequest.getMemberName() !=null ){
-            scheduleRepository.updateBoardMemberImageAndMemberName(memberUpdateRequest.getMemberName(), memberUpdateRequest.getMemberImage(), memberId);
+            scheduleRepository.updateAlbumMemberImageAndMemberName(memberUpdateRequest.getMemberName(), memberUpdateRequest.getMemberImage(), memberId);
         } else if (memberUpdateRequest.getMemberImage()!=null && memberUpdateRequest.getMemberName() ==null) {
-            scheduleRepository.updateBoardMemberImage(memberUpdateRequest.getMemberImage(),memberId);
+            scheduleRepository.updateAlbumMemberImage(memberUpdateRequest.getMemberImage(),memberId);
         } else if (memberUpdateRequest.getMemberImage()==null && memberUpdateRequest.getMemberName() != null) {
-            scheduleRepository.updateBoardMemberName(memberUpdateRequest.getMemberName(), memberId);
+            scheduleRepository.updateAlbumdMemberName(memberUpdateRequest.getMemberName(), memberId);
         } else {
             throw new Exception("NULL REQUEST");
         }
-    }*/
+    }
 
     public Boolean checkAttandance(Long memberId, Long scheduleid
     ){

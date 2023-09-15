@@ -74,10 +74,10 @@ public class ScheduleController {
         scheduleService.updateSchedule(communityId, scheduleId, scheduleRequest);
     }
 
-   /* @PutMapping("/updatemember/{memberId}")
+    @PutMapping("/updatemember/{memberId}")
     public void updateMemberBoard(@PathVariable("memberId") Long memberId,
                                   @RequestBody MemberUpdateRequest memberUpdateRequest) throws Exception {
         scheduleService.updateBoardMember(memberUpdateRequest, memberId);
-    }*/
+    }
 
 }
