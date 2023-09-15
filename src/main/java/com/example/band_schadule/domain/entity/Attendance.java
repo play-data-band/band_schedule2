@@ -10,7 +10,7 @@ import lombok.*;
 public class Attendance {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long communityMemberId;
+    private Long memberId;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")

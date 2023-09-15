@@ -2,6 +2,7 @@ package com.example.band_schadule.controller;
 
 import com.example.band_schadule.common.RestResult;
 import com.example.band_schadule.domain.dto.AttendanceRequestDto;
+import com.example.band_schadule.domain.request.MemberUpdateRequest;
 import com.example.band_schadule.domain.request.ScheduleRequest;
 import com.example.band_schadule.domain.response.ScheduleResponse;
 import com.example.band_schadule.service.ScheduleService;
@@ -27,6 +28,15 @@ public class ScheduleController {
     public List<ScheduleResponse> findAll(@PathVariable("id") Long communityId) {
         List<ScheduleResponse> all = scheduleService.findAll(communityId);
         return all;
+    }
+
+    //가입 정보를 위한 컨트롤러
+    @GetMapping("scheduleid/{scheduleid}/memberid/{memberid}")
+    public Boolean checkAttandance(
+            @PathVariable("memberid") Long memberId,
+            @PathVariable("scheduleid") Long scheduleid
+            ){
+       return scheduleService.checkAttandance(memberId,scheduleid);
     }
 
     @GetMapping
@@ -64,5 +74,10 @@ public class ScheduleController {
         scheduleService.updateSchedule(communityId, scheduleId, scheduleRequest);
     }
 
+   /* @PutMapping("/updatemember/{memberId}")
+    public void updateMemberBoard(@PathVariable("memberId") Long memberId,
+                                  @RequestBody MemberUpdateRequest memberUpdateRequest) throws Exception {
+        scheduleService.updateBoardMember(memberUpdateRequest, memberId);
+    }*/
 
 }

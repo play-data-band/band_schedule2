@@ -24,16 +24,11 @@ public class Schedule {
     private int maxParticipation;
     private int participant;
     private String interest;
+    private Long memberId;
     private String memberName;
     private String memberImage;
     private Long communityId;
 
-    public void setParticipant(int participant) {
-        if (participant < 0) {
-            this.participant = 0;
-        } else {
-            this.participant = participant;
-        }
-    }
+
 
 }

@@ -20,5 +20,21 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> getScheduleByMain(List<String> interests, @Param("currentTime") LocalDateTime currentTime);
 
     List<Schedule> findByCommunityId(Long communityId);
+
+//    @Query("update Schedule s " +
+//            "set s.memberName = :memberName " +
+//            "where s.memberId = :memberId")
+//    void updateBoardMemberName(@Param("memberName") String memberName, @Param("memberId") Long memberId);
+//    @Query("update Schedule s " +
+//            "set s.memberImage = :memberImage " +
+//            "where s.memberId = :memberId")
+//    void updateBoardMemberImage(@Param("memberImage") String memberImage, @Param("memberId") Long memberId);
+//    @Query("update Schedule s " +
+//            "set s.memberImage = :memberImage," +
+//            "s.memberName = : memberName " +
+//            "where s.memberId = :memberId")
+//    void updateBoardMemberImageAndMemberName(@Param("memberName")String memberName, @Param("memberImage") String memberImage, @Param("memberId") Long memberId);
+
+
 }
 
