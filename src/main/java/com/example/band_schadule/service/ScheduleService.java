@@ -6,6 +6,7 @@ import com.example.band_schadule.common.RestResult;
 import com.example.band_schadule.domain.dto.AttendanceRequestDto;
 import com.example.band_schadule.domain.entity.Attendance;
 import com.example.band_schadule.domain.entity.Schedule;
+import com.example.band_schadule.domain.request.ScheduleRequest;
 import com.example.band_schadule.domain.response.ScheduleResponse;
 import com.example.band_schadule.repository.AttendanceRepository;
 import com.example.band_schadule.repository.ScheduleRepository;
@@ -28,6 +29,29 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final AttendanceRepository attendanceRepository;
 
+    public void save(Long communityId, ScheduleRequest request) {
+        Schedule schedule = Schedule.builder()
+                .scheduleName(request.getScheduleName())
+                .scheduleTime(request.getScheduleTime())
+                .meetingPlace(request.getMeetingPlace())
+                .price(request.getPrice())
+                .maxParticipation(request.getMaxParticipation())
+                .communityId(communityId)
+                .interest(request.getInterest())
+                .build();
+        scheduleRepository.save(schedule);
+    }
+
+    public List<ScheduleResponse> findAllSchedule() {
+        List<Schedule> scheduleList = scheduleRepository.findAll();
+        return scheduleList.stream().map(ScheduleResponse::new).collect(Collectors.toList());
+    }
+
+    public List<ScheduleResponse> findAll(Long communityId) {
+        List<Schedule> scheduleList = scheduleRepository.findByCommunityId(communityId);
+        return scheduleList.stream().map(ScheduleResponse::new).collect(Collectors.toList());
+    }
+
     public List<ScheduleResponse> findUpcomingSchedulesByInterest(List<String> interest) {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Schedule> scheduleList = scheduleRepository.getScheduleByMain(interest, currentTime);
@@ -37,6 +61,27 @@ public class ScheduleService {
     public ScheduleResponse findById(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Schedule not found"));
         return new ScheduleResponse(schedule);
+    }
+
+    public void deleteByScheduleId(Long scheduleId) {
+        scheduleRepository.deleteById(scheduleId);
+    }
+
+    public void updateSchedule(Long communityId, Long scheduleId, ScheduleRequest request) {
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+
+        if (!schedule.getCommunityId().equals(communityId)) {
+            throw new RuntimeException("Mismatched Community and Schedule");
+        }
+        schedule.setScheduleName(request.getScheduleName());
+        schedule.setScheduleTime(request.getScheduleTime());
+        schedule.setMeetingPlace(request.getMeetingPlace());
+        schedule.setPrice(request.getPrice());
+        schedule.setMaxParticipation(request.getMaxParticipation());
+
+        scheduleRepository.save(schedule);
     }
 
     //스케줄 참석/불참

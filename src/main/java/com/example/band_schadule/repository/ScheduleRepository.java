@@ -21,3 +21,4 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     List<Schedule> findAllBycommunityId(Long communityId);
 }
+
