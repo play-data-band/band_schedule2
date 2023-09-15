@@ -97,6 +97,13 @@ public class ScheduleService {
         return ResponseEntity.ok(new RestResult<>("success", "참석이 완료 되었습니다."));
     }
 
+
+    public List<ScheduleResponse> findAllBycommunityId(Long communityId) {
+
+        List<Schedule> byCommunityId = scheduleRepository.findAllBycommunityId(communityId);
+
+        return byCommunityId.stream().map(ScheduleResponse::new).toList();
+    }
 }
 
 
