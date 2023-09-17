@@ -39,5 +39,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     void updateAlbumMemberImageAndMemberName(@Param("memberName")String memberName, @Param("memberImage") String memberImage, @Param("memberId") Long memberId);
 
 
+    List<Schedule> findAllBycommunityId(Long communityId);
+
 }
 
