@@ -7,6 +7,10 @@ import lombok.*;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table( indexes = {
+        @Index(name = "idx_schedule_id", columnList = "schedule_id"),
+        @Index(name = "idx_member_id", columnList = "memberId")
+})
 public class Attendance {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

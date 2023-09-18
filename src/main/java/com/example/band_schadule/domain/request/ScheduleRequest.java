@@ -16,5 +16,6 @@ public class ScheduleRequest {
     private String price;
     private int maxParticipation;
     private String interest;
+    private Long memberId;
 
 }

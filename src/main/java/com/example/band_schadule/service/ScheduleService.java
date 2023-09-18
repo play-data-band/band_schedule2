@@ -115,8 +115,8 @@ public class ScheduleService {
             if ("Y".equals(useYn)) {
                 //참석할 수 있는 최대 인원과 현재 참석한 인원 비교
                 if (schedule.getParticipant() < schedule.getMaxParticipation()) {
-                    Boolean attendancecheck = checkAttandance(memberId,scheduleId);
-                    if (attendancecheck){
+                    Boolean attendanceCheck = checkAttendance(memberId,scheduleId);
+                    if (attendanceCheck){
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                 .body(new RestResult<>("BAD_REQUEST", new RestError("BAD_REQUEST", "이미 가입했습니다.")));
                     }
@@ -163,9 +163,9 @@ public class ScheduleService {
         }
     }
 
-    public Boolean checkAttandance(Long memberId, Long scheduleid
+    public Boolean checkAttendance(Long memberId, Long scheduleId
     ){
-       Optional<Attendance> check= attendanceRepository.findByMemberIdAndSchedule(memberId,Schedule.builder().id(scheduleid).build());
+       Optional<Attendance> check= attendanceRepository.findByMemberIdAndSchedule(memberId,Schedule.builder().id(scheduleId).build());
        Boolean res = null;
 
        try {
