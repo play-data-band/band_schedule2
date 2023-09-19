@@ -23,6 +23,7 @@ public class ScheduleResponse {
     private String interest;
     private String memberName;
     private String memberImage;
+    private Long communityId;
 
     public ScheduleResponse(Schedule schedule) {
         this.id = schedule.getId();
@@ -35,5 +36,6 @@ public class ScheduleResponse {
         this.interest = schedule.getInterest();
         this.memberName = schedule.getMemberName();
         this.memberImage = schedule.getMemberImage();
+        this.communityId = schedule.getCommunityId();
     }
 }
