@@ -4,7 +4,11 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/schedule?serverTimezone=Asia/Seoul
     username: root
+<<<<<<< HEAD
     password: 1234
+=======
+    password: 1q2w3e4r!!
+>>>>>>> e4d95cb2ef269b79b090295107ab86f7013c779f
   jpa:
     hibernate:
       ddl-auto: update

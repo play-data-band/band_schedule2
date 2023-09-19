@@ -108,19 +108,20 @@ public class ScheduleService {
 
        /* CommunityMember communityMember = communityMemberRepository.findByCommunityIdAndMemberId(communityId, memberId).orElseThrow(
                 () -> new RuntimeException("CommunityMember not found!"));*/
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new RuntimeException("Schedule not found!"));
+        Schedule schedule = scheduleRepository.findAllByIdWithOptimisiticLock(scheduleId).orElseThrow(() -> new RuntimeException("Schedule not found!"));
 
 //        Optional<Attendance> attendance = attendanceRepository.findByCommunityMemberAndSchedule(communityMemberId, schedule);
 
             if ("Y".equals(useYn)) {
                 //참석할 수 있는 최대 인원과 현재 참석한 인원 비교
                 if (schedule.getParticipant() < schedule.getMaxParticipation()) {
-                    Boolean attendancecheck = checkAttandance(memberId,scheduleId);
-                    if (attendancecheck){
+                    Boolean attendanceCheck = checkAttendance(memberId,scheduleId);
+                    if (attendanceCheck){
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                 .body(new RestResult<>("BAD_REQUEST", new RestError("BAD_REQUEST", "이미 가입했습니다.")));
                     }
-                    //참석
+
+//                    참석
                     Attendance attendance = Attendance.builder()
                             .schedule(schedule)
                             .useYn(attendanceRequestDto.getUseYn())
@@ -129,7 +130,12 @@ public class ScheduleService {
                     attendanceRepository.save(attendance);
 
                     // 참석 인원 증가
-                    schedule.setParticipant(schedule.getParticipant() + 1);
+                    try {
+//                        scheduleRepository.updateParticipantByVersion(scheduleId, schedule.getVersion());
+                        schedule.setParticipant(schedule.getParticipant()+1);
+                    }catch (Exception e){
+                        toggleAttendance(attendanceRequestDto);
+                    }
 
                 } else {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -165,18 +171,17 @@ public class ScheduleService {
         }
     }
 
-    public Boolean checkAttandance(Long memberId, Long scheduleid
-    ){
-       Optional<Attendance> check= attendanceRepository.findByMemberIdAndSchedule(memberId,Schedule.builder().id(scheduleid).build());
-       Boolean res = null;
 
-       try {
-           check.get();
-           res = Boolean.TRUE;
-       }catch (Exception e){
-           res = Boolean.FALSE;
-       }
-       return res;
+    public Boolean checkAttendance(Long memberId, Long scheduleId
+    ){
+        Boolean res = null;
+        Integer check = attendanceRepository.countAttendanceByMemberIdAndSchedule(memberId,Schedule.builder().id(scheduleId).version(0).build());
+        if (check == 1){
+            res = Boolean.TRUE;
+        }else {
+            res = Boolean.FALSE;
+        }
+        return res;
     }
 
 

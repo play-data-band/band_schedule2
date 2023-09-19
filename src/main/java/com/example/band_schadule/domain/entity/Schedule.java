@@ -29,7 +29,8 @@ public class Schedule {
     private String memberName;
     private String memberImage;
     private Long communityId;
-
+    @Version
+    private Integer version;
 
 
 }

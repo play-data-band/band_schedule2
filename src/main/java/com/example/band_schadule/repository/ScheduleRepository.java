@@ -1,16 +1,33 @@
 package com.example.band_schadule.repository;
 
 import com.example.band_schadule.domain.entity.Schedule;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
+
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("select s " +
+            "from Schedule s " +
+            "where s.id = :id")
+    Optional<Schedule> findAllByIdWithOptimisiticLock(@Param("id") Long id);
+
+    @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
+    @Modifying
+    @Query("update Schedule s " +
+            "set s.participant = s.participant + 1 " +
+            "where s.id = :id " +
+            "and s.version = :version")
+    void updateParticipantByVersion(@Param("id") Long id ,@Param("version") Integer version);
 
     @Query("select s " +
             "from Schedule s " +

@@ -37,7 +37,7 @@ public class ScheduleController {
             @PathVariable("memberid") Long memberId,
             @PathVariable("scheduleid") Long scheduleid
             ){
-       return scheduleService.checkAttandance(memberId,scheduleid);
+       return scheduleService.checkAttendance(memberId,scheduleid);
     }
 
     @GetMapping
