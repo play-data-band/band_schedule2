@@ -2,6 +2,7 @@ package com.example.band_schadule.controller;
 
 import com.example.band_schadule.common.RestResult;
 import com.example.band_schadule.domain.dto.AttendanceRequestDto;
+import com.example.band_schadule.domain.entity.Attendance;
 import com.example.band_schadule.domain.request.MemberUpdateRequest;
 import com.example.band_schadule.domain.request.ScheduleRequest;
 import com.example.band_schadule.domain.dto.ScheduleDto;
@@ -23,6 +24,11 @@ public class ScheduleController {
     public void save(@PathVariable("communityId") Long communityId,
                      @RequestBody ScheduleRequest scheduleRequest) {
         scheduleService.save(communityId, scheduleRequest);
+    }
+
+    @GetMapping("/schedule/{id}")
+    public List<Attendance> findByAtt(@PathVariable("id") Long id) {
+        return scheduleService.findByAtt(id);
     }
 
     @GetMapping("/community/{id}")

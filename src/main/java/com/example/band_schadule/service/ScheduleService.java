@@ -44,6 +44,10 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
     }
 
+    public List<Attendance> findByAtt(Long id) {
+        return attendanceRepository.findAllByScheduleId(id);
+    }
+
     public List<ScheduleResponse> findAllSchedule() {
         List<Schedule> scheduleList = scheduleRepository.findAll();
         return scheduleList.stream().map(ScheduleResponse::new).collect(Collectors.toList());

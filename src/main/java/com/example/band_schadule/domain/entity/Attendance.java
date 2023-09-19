@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity @Builder
-@Table( indexes = {
-        @Index(name = "idx_schedule_id", columnList = "schedule_id"),
-        @Index(name = "idx_member_id", columnList = "memberId")})
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
